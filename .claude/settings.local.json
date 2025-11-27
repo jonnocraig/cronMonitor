@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(bun:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(sysctl:*)",
+      "Bash(curl:*)",
+      "Bash(bash)",
+      "Bash(~/.bun/bin/bun install:*)",
+      "Bash(~/.bun/bin/bun run test:*)",
+      "Bash(MONITOR_URL=\"https://example.com\" NTFY_TOPIC=\"test-monitor-12345\" ~/.bun/bin/bun run:*)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
