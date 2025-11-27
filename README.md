@@ -111,6 +111,74 @@ Common cron schedules:
 | Daily at 9 AM | `0 9 * * *` |
 | Every 15 minutes | `*/15 * * * *` |
 
+### macOS launchd Setup (Recommended for Mac)
+
+For macOS, `launchd` is preferred over cron. Create a plist file:
+
+```bash
+# Create the plist file
+nano ~/Library/LaunchAgents/com.user.cronmonitor.plist
+```
+
+Paste the following (update paths and environment variables for your setup):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.cronmonitor</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/YOUR_USERNAME/.bun/bin/bun</string>
+        <string>run</string>
+        <string>/path/to/cron-monitor/src/index.ts</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/path/to/cron-monitor</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>MONITOR_URL</key>
+        <string>https://example.com/page-to-watch</string>
+        <key>NTFY_TOPIC</key>
+        <string>your-unique-topic</string>
+    </dict>
+    <key>StartInterval</key>
+    <integer>1800</integer>
+    <key>StandardOutPath</key>
+    <string>/Users/YOUR_USERNAME/Library/Logs/cronmonitor.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/YOUR_USERNAME/Library/Logs/cronmonitor.error.log</string>
+</dict>
+</plist>
+```
+
+| Setting | Description |
+|---------|-------------|
+| `StartInterval` | Run interval in seconds (1800 = 30 minutes) |
+| `StandardOutPath` | Log file location (survives reboots) |
+
+**Management commands:**
+
+```bash
+# Load the job (starts scheduling)
+launchctl load ~/Library/LaunchAgents/com.user.cronmonitor.plist
+
+# Unload the job (stops scheduling)
+launchctl unload ~/Library/LaunchAgents/com.user.cronmonitor.plist
+
+# Check if job is loaded (shows PID, exit status, label)
+launchctl list | grep cronmonitor
+
+# Manually trigger a run (for testing)
+launchctl kickstart gui/$(id -u)/com.user.cronmonitor
+
+# View logs
+tail -20 ~/Library/Logs/cronmonitor.log
+cat ~/Library/Logs/cronmonitor.error.log
+```
+
 ## Project Structure
 
 ```

@@ -19,8 +19,9 @@ export async function sendNotification(topic: string, url: string): Promise<void
       'Priority': 'high',
       'Tags': 'rotating_light,bell',
       'Click': url,
+      'Actions': `view, Open Website, ${url}`,
     },
-    body: `The monitored page has been updated:\n\n${url}\n\nCheck it now!`,
+    body: `The monitored page has been updated. Tap to view or use the button below.`,
   });
 
   if (!response.ok) {
